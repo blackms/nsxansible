@@ -17,6 +17,7 @@
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+
 def get_logical_switch(client_session, logical_switch_name):
     """
     :param client_session: An instance of an NsxClient Session
@@ -316,7 +317,7 @@ def check_interfaces(client_session, dlr_id, module):
 
         if not intf['addressGroups']:
             intf['addressGroups'] = {'addressGroup': {'primaryAddress': ifaces[idx]['ip'],
-                                     'subnetPrefixLength': ifaces[idx]['prefix_len']}}
+                                                      'subnetPrefixLength': ifaces[idx]['prefix_len']}}
             intf_changed = True
         else:
             if intf['addressGroups']['addressGroup']['primaryAddress'] != ifaces[idx]['ip']:
@@ -330,7 +331,7 @@ def check_interfaces(client_session, dlr_id, module):
 
         if intf_changed:
             intf['isConnected'] = 'true'
-            intfs_update =  {'interface': intf}
+            intfs_update = {'interface': intf}
             client_session.update('interface', uri_parameters={'edgeId': dlr_id, 'index': ifindex},
                                   request_body_dict=intfs_update)
             changed = True
@@ -351,7 +352,7 @@ def check_interfaces(client_session, dlr_id, module):
                       }
             client_session.create('interfaces', uri_parameters={'edgeId': dlr_id},
                                   query_parameters_dict={'action': 'patch'},
-                                  request_body_dict={'interfaces': {'interface': add_if }}
+                                  request_body_dict={'interfaces': {'interface': add_if}}
                                   )
             changed = True
 
@@ -362,7 +363,6 @@ def check_interfaces(client_session, dlr_id, module):
             current_interfaces = client_session.normalize_list_return(intfs_api['interfaces']['interface'])
         else:
             current_interfaces = []
-
 
     return changed, current_interfaces
 
@@ -391,10 +391,10 @@ def main():
     )
 
     from nsxramlclient.client import NsxClient
-    client_session=NsxClient(module.params['nsxmanager_spec']['raml_file'],
-                             module.params['nsxmanager_spec']['host'],
-                             module.params['nsxmanager_spec']['user'],
-                             module.params['nsxmanager_spec']['password'])
+    client_session = NsxClient(module.params['nsxmanager_spec']['raml_file'],
+                               module.params['nsxmanager_spec']['host'],
+                               module.params['nsxmanager_spec']['user'],
+                               module.params['nsxmanager_spec']['password'])
 
     if module.params['remote_access'] == 'true' and not (module.params['password'] and module.params['username']):
         module.fail_json(msg='if remote access is enabled, username and password must be set')
@@ -451,5 +451,6 @@ def main():
 
 
 from ansible.module_utils.basic import *
+
 if __name__ == '__main__':
     main()

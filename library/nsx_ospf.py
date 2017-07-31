@@ -69,6 +69,7 @@ def check_router_id(current_config, router_id):
         current_config['routing']['routingGlobalConfig']['routerId'] = router_id
         return True, current_config
 
+
 def check_ecmp(current_config, ecmp):
     current_ecmp_cfg = current_config['routing']['routingGlobalConfig']
     current_ecmp_state = current_ecmp_cfg.get('ecmp', None)
@@ -297,7 +298,6 @@ def check_area_mapping(client_session, current_config, d_area_map):
     c_area_vnics = [c_map['vnic'] for c_map in c_map_list]
     for d_map in d_area_map:
         if d_map['vnic'] not in c_area_vnics:
-
             new_map = {'areaId': d_map['area_id'], 'vnic': d_map.get('vnic'), 'helloInterval': d_map.get('hello'),
                        'deadInterval': d_map.get('dead'), 'cost': d_map.get('cost'),
                        'priority': d_map.get('priority'), 'mtuIgnore': d_map.get('ignore_mtu')}
@@ -383,7 +383,7 @@ def main():
 
     changed_area_map, current_config = check_area_mapping(client_session, current_config, module.params['area_map'])
 
-    if (changed_state or changed_rtid or changed_ecmp or changed_opt or changed_areas or changed_area_map):
+    if changed_state or changed_rtid or changed_ecmp or changed_opt or changed_areas or changed_area_map:
         update_config(client_session, current_config, edge_id)
         module.exit_json(changed=True, current_config=current_config)
     else:
@@ -391,5 +391,6 @@ def main():
 
 
 from ansible.module_utils.basic import *
+
 if __name__ == '__main__':
     main()
